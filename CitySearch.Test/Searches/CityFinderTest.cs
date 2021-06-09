@@ -11,7 +11,7 @@ namespace CitySearch.Test.Searches
     [TestClass]
     public abstract class CityFinderTest
     {
-        internal abstract SimpleCityFinder getFinder(IList<string> cities);
+        internal abstract ICityFinder getFinder(IList<string> cities);
         IList<string> cities;
 
         [TestInitialize]
@@ -21,9 +21,11 @@ namespace CitySearch.Test.Searches
             {
                 cities = new List<string>();
 
-                if (File.Exists("citynames.csv"))
+                string path = "Data/citynames.csv";
+
+                if (File.Exists(path))
                 {
-                    using(StreamReader sr = File.OpenText("citynames.csv"))
+                    using(StreamReader sr = File.OpenText(path))
                     {
                         string s;
                         while((s = sr.ReadLine()) != null)
@@ -60,6 +62,50 @@ namespace CitySearch.Test.Searches
                         string nextLetter = s.Substring(partialCityName.Length, 1);
                         Assert.IsTrue(result.NextLetters.Contains(nextLetter), "Character (" + nextLetter + ") not available in the list of next characters");
                     }
+                }
+            }
+        }
+
+        /**
+         * If not sorted correctly "L'A" can be mixed within "La" as `'` would be skipped
+         */
+        [TestMethod]
+        public void search_La()
+        {
+            ICityFinder finder = getFinder(cities);
+            string partialCityName = "La";
+
+            ICityResult result = finder.Search(partialCityName);
+            foreach (String s in result.NextCities)
+            {
+                Assert.AreEqual(partialCityName, s.Substring(0, partialCityName.Length));
+                //we only want to check for next letter if there is one
+                if (s.Length > partialCityName.Length)
+                {
+                    string nextLetter = s.Substring(partialCityName.Length, 1);
+                    Assert.IsTrue(result.NextLetters.Contains(nextLetter), "Character (" + nextLetter + ") not available in the list of next characters");
+                }
+            }
+        }
+
+        /**
+         * Check if space is correctly treated in "Los " search
+         */
+        [TestMethod]
+        public void search_Los_()
+        {
+            ICityFinder finder = getFinder(cities);
+            string partialCityName = "Los ";
+
+            ICityResult result = finder.Search(partialCityName);
+            foreach (String s in result.NextCities)
+            {
+                Assert.AreEqual(partialCityName, s.Substring(0, partialCityName.Length));
+                //we only want to check for next letter if there is one
+                if (s.Length > partialCityName.Length)
+                {
+                    string nextLetter = s.Substring(partialCityName.Length, 1);
+                    Assert.IsTrue(result.NextLetters.Contains(nextLetter), "Character (" + nextLetter + ") not available in the list of next characters");
                 }
             }
         }

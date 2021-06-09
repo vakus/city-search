@@ -7,11 +7,11 @@ using System.Text;
 namespace CitySearch.Test.Searches
 {
     [TestClass]
-    public class SimpleCityFinderTest : CityFinderTest
+    public class TreeCityFinderTest : CityFinderTest
     {
         internal override ICityFinder getFinder(IList<string> cities)
         {
-            return new SimpleCityFinder(cities);
+            return new TreeCityFinder(cities);
         }
     }
 }

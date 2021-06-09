@@ -1,0 +1,71 @@
+﻿using CitySearch;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using System.Linq;
+
+namespace CitySearch
+{
+    public class TreeCityFinder : ICityFinder
+    {
+        Node rootNode;
+        IList<string> cities;
+
+        public TreeCityFinder(IList<string> cities)
+        {
+            rootNode = new Node { subnodes = new Dictionary<string, Node>(), startIndex = 0, endIndex = cities.Count};
+
+            cities = cities.OrderBy(r => r, StringComparer.Ordinal).ToList();
+            this.cities = cities;
+            for(int x = 0; x < cities.Count; x++) 
+            {
+                Node current = rootNode;
+                string name = cities[x];
+                foreach(char letter in name)
+                {
+                    if (!current.subnodes.ContainsKey(letter.ToString())) { 
+
+                        current.subnodes.Add(letter.ToString(), new Node { subnodes = new Dictionary<string, Node>(), startIndex =x, endIndex=x});
+                    }
+                    else
+                    {
+                        current.endIndex = x;
+                    }
+                    current = current.subnodes[letter.ToString()];
+                }
+            }
+        }
+
+        public ICityResult Search(string searchString)
+        {
+            CityResult result = new CityResult { NextCities = new List<string> { }, NextLetters = new List<string> { } };
+            Node node = rootNode;
+            foreach(char letter in searchString)
+            {
+                if (node.subnodes.ContainsKey(letter.ToString()))
+                {
+                    node = node.subnodes[letter.ToString()];
+                }
+                else
+                {
+                    //there isnt any deeper nodes so we dont know of any cities with this name
+                    return result;
+                }
+            }
+
+            result.NextLetters = node.subnodes.Keys.ToList();
+            result.NextCities = cities.Select((v, i) => (i >= node.startIndex && i <= node.endIndex) ? v : null).Where(r => r != null).ToList();
+
+            return result;
+        }
+    }
+
+    class Node
+    {
+        public Dictionary<string, Node> subnodes;
+        public int startIndex;
+        public int endIndex;
+    }
+
+}
