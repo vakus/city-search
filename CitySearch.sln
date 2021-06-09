@@ -3,9 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30523.141
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CitySearch", "CitySearch\CitySearch.csproj", "{8B66BE45-6EB1-445D-B33B-1A58A1F5D44F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CitySearch", "CitySearch\CitySearch.csproj", "{8B66BE45-6EB1-445D-B33B-1A58A1F5D44F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CitySearch.Test", "CitySearch.Test\CitySearch.Test.csproj", "{F22580B7-BF28-4557-B5E1-A360D2122591}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CitySearch.Test", "CitySearch.Test\CitySearch.Test.csproj", "{F22580B7-BF28-4557-B5E1-A360D2122591}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8B66BE45-6EB1-445D-B33B-1A58A1F5D44F} = {8B66BE45-6EB1-445D-B33B-1A58A1F5D44F}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
