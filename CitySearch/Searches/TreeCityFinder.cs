@@ -16,7 +16,7 @@ namespace CitySearch
         {
             rootNode = new Node { subnodes = new Dictionary<string, Node>(), startIndex = 0, endIndex = cities.Count};
 
-            cities = cities.OrderBy(r => r, StringComparer.Ordinal).ToList();
+            cities = cities.OrderBy(r => r.ToUpper(), StringComparer.Ordinal).ToList();
             this.cities = cities;
             for(int x = 0; x < cities.Count; x++) 
             {
@@ -39,7 +39,7 @@ namespace CitySearch
 
         public ICityResult Search(string searchString)
         {
-            
+            searchString = searchString.ToUpper();
             Node node = rootNode;
             foreach(char letter in searchString)
             {

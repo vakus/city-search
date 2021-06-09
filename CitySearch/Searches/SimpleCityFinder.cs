@@ -12,7 +12,7 @@ namespace CitySearch.Searches
         public SimpleCityFinder(ICollection<string> cities)
         {
             //sorted lists are usually better for speculative execution
-            cities = cities.OrderBy(r => r).ToList();
+            cities = cities.OrderBy(r => r.ToUpper(), StringComparer.OrdinalIgnoreCase).ToList();
             this.cities = cities;
             
         }
