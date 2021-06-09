@@ -47,7 +47,7 @@ namespace CitySearch.Test.Searches
             ICityFinder finder = getFinder(cities);
 
             Random random = new Random();
-            for(int x = 0; x < 100; x++)
+            for(int x = 0; x < 500; x++)
             {
                 string fullCityName = cities[random.Next(cities.Count)];
                 string partialCityName = fullCityName.Substring(0, random.Next(fullCityName.Length));

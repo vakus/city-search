@@ -39,7 +39,7 @@ namespace CitySearch
 
         public ICityResult Search(string searchString)
         {
-            CityResult result = new CityResult { NextCities = new List<string> { }, NextLetters = new List<string> { } };
+            
             Node node = rootNode;
             foreach(char letter in searchString)
             {
@@ -50,14 +50,14 @@ namespace CitySearch
                 else
                 {
                     //there isnt any deeper nodes so we dont know of any cities with this name
-                    return result;
+                    return new CityResult { NextCities = new List<string> { }, NextLetters = new List<string> { } };
                 }
             }
 
-            result.NextLetters = node.subnodes.Keys.ToList();
-            result.NextCities = cities.Select((v, i) => (i >= node.startIndex && i <= node.endIndex) ? v : null).Where(r => r != null).ToList();
-
-            return result;
+            return new CityResult{
+                NextLetters= node.subnodes.Keys.ToList(),
+                NextCities = cities.Where((v, i) => i >= node.startIndex && i <= node.endIndex).ToList()
+            };
         }
     }
 
