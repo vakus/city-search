@@ -14,25 +14,26 @@ namespace CitySearch
 
         public TreeCityFinder(IList<string> cities)
         {
-            rootNode = new Node { subnodes = new Dictionary<string, Node>(), startIndex = 0, endIndex = cities.Count};
+            rootNode = new Node { subnodes = new Dictionary<char, Node>(), startIndex = 0, endIndex = cities.Count };
 
             cities = cities.OrderBy(r => r.ToUpper(), StringComparer.Ordinal).ToList();
             this.cities = cities;
-            for(int x = 0; x < cities.Count; x++) 
+            for (int x = 0; x < cities.Count; x++)
             {
                 Node current = rootNode;
                 string name = cities[x];
-                foreach(char letter in name)
+                foreach (char letter in name)
                 {
-                    if (!current.subnodes.ContainsKey(letter.ToString())) { 
+                    if (!current.subnodes.ContainsKey(letter))
+                    {
 
-                        current.subnodes.Add(letter.ToString(), new Node { subnodes = new Dictionary<string, Node>(), startIndex =x, endIndex=x});
+                        current.subnodes.Add(letter, new Node { subnodes = new Dictionary<char, Node>(), startIndex = x, endIndex = x });
                     }
                     else
                     {
                         current.endIndex = x;
                     }
-                    current = current.subnodes[letter.ToString()];
+                    current = current.subnodes[letter];
                 }
             }
         }
@@ -41,11 +42,11 @@ namespace CitySearch
         {
             searchString = searchString.ToUpper();
             Node node = rootNode;
-            foreach(char letter in searchString)
+            foreach (char letter in searchString)
             {
-                if (node.subnodes.ContainsKey(letter.ToString()))
+                if (node.subnodes.ContainsKey(letter))
                 {
-                    node = node.subnodes[letter.ToString()];
+                    node = node.subnodes[letter];
                 }
                 else
                 {
@@ -54,8 +55,9 @@ namespace CitySearch
                 }
             }
 
-            return new CityResult {
-                NextLetters = node.subnodes.Keys.ToList(),
+            return new CityResult
+            {
+                NextLetters = node.subnodes.Keys.Select(r => r.ToString()).ToList(),
                 NextCities = cities.Skip(node.startIndex).Take(node.endIndex - node.startIndex).ToList()
             };
         }
@@ -63,7 +65,7 @@ namespace CitySearch
 
     class Node
     {
-        public Dictionary<string, Node> subnodes;
+        public Dictionary<char, Node> subnodes;
         public int startIndex;
         public int endIndex;
     }
