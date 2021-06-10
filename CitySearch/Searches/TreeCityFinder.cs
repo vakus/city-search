@@ -54,9 +54,9 @@ namespace CitySearch
                 }
             }
 
-            return new CityResult{
-                NextLetters= node.subnodes.Keys.ToList(),
-                NextCities = cities.Where((v, i) => i >= node.startIndex && i <= node.endIndex).ToList()
+            return new CityResult {
+                NextLetters = node.subnodes.Keys.ToList(),
+                NextCities = cities.Skip(node.startIndex).Take(node.endIndex - node.startIndex).ToList()
             };
         }
     }
